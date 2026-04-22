@@ -9,7 +9,9 @@ Data extraction from a raw csv table
 Data transformation and cleaning using SQL
 Loading data into dimension and fact tables (ETL process)
 
-Architecture created using draw.io
+**Architecture created using draw.io:**
+<img width="974" height="948" alt="PCData Model drawio" src="https://github.com/user-attachments/assets/83925152-eeba-48dc-bac3-ef66a27d63af" />
+
 
 **The project follows a Star Schema design:**
 
