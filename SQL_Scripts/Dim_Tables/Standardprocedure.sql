@@ -85,14 +85,31 @@ end;
 create procedure sp_create_dim_date
 as begin
 drop table [pcdatade].[dbo].[dim_date]
-create table [pcdatade].[dbo].[dim_date]
-([date_id] int identity (1,1) primary key,
-[purchase_date] date not null,
-[ship_date] date not null)
+CREATE TABLE [pcdatade].[dbo].[dim_date]
+(
+    [date_id] INT IDENTITY(1,1) PRIMARY KEY,
+    [purchase_date] DATE,
+    [ship_date] DATE
+);
 
---inserting data into the dim_date
-insert into [pcdatade].[dbo].[dim_date] (purchase_date, ship_date)
-select distinct coalesce(try_convert(date,purchase_date,103),'1900-01-01'), coalesce(try_convert (date, ship_date,103),'1900-01-01') from [pcdatade].[dbo].[mainpc_data]
+-- INSERT DATA
+INSERT INTO [pcdatade].[dbo].[dim_date]
+(
+    purchase_date,
+    ship_date
+)
+
+SELECT DISTINCT
+
+    TRY_CONVERT(DATE, purchase_date),
+
+    ISNULL
+    (
+        TRY_CONVERT(DATE, NULLIF(ship_date, 'N/A')),
+        '2099-12-31'
+    )
+
+FROM [pcdatade].[dbo].[mainpc_data]
 end;
 
 --

@@ -76,18 +76,37 @@ select distinct payment_method from [pcdatade].[dbo].[mainpc_data]
 --testing if the data has been inserted
 select * from [pcdatade].[dbo].[dim_payment]
 
---creating the dim_date
-create table [pcdatade].[dbo].[dim_date]
-([date_id] int identity (1,1) primary key,
-[purchase_date] date not null,
-[ship_date] date not null)
+-- CREATE TABLE
+drop table [pcdatade].[dbo].[dim_date]
+CREATE TABLE [pcdatade].[dbo].[dim_date]
+(
+    [date_id] INT IDENTITY(1,1) PRIMARY KEY,
+    [purchase_date] DATE,
+    [ship_date] DATE
+);
 
---inserting data into the dim_date
-insert into [pcdatade].[dbo].[dim_date] (purchase_date, ship_date)
-select distinct coalesce(try_convert(date,purchase_date,103),'1900-01-01'), coalesce(try_convert (date, ship_date,103),'1900-01-01') from [pcdatade].[dbo].[mainpc_data]
+-- INSERT DATA
+INSERT INTO [pcdatade].[dbo].[dim_date]
+(
+    purchase_date,
+    ship_date
+)
 
---testing if the data is inserted into the dim_date
-select * from [pcdatade].[dbo].[dim_date]
+SELECT DISTINCT
+
+    TRY_CONVERT(DATE, purchase_date),
+
+    ISNULL
+    (
+        TRY_CONVERT(DATE, NULLIF(ship_date, 'N/A')),
+        '2099-12-31'
+    )
+
+FROM [pcdatade].[dbo].[mainpc_data];
+
+-- TEST DATA
+SELECT *
+FROM [pcdatade].[dbo].[dim_date];
 
 --creating the dim_channel table
 create table [pcdatade].[dbo].[dim_channel](
